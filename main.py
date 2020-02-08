@@ -10,23 +10,28 @@ print("Setting PINS to HIGH...")
 SETUP_PINS()
 
 print("Connecting to Arduino...")
-ser = serial.Serial('/dev/ttyUSB0', 9600)
+#ser = serial.Serial('/dev/ttyUSB0', 9600)
 
 Buttons = [0, 0, 0, 0, 0, 0, 0]
 Switches = [0, 0, 0, 0, 0, 0, 0]
 
 print("Listening")
 
+
 while True:
 	SET_DEFAULT_HIGH(Buttons, Switches)
 	
+	count = 0
 	for i in Buttons:
 		if i == False:
-			print("Button " + str(i))
+			print("Button " + str(count))
 			time.sleep(0.1)
+		count += 1
 	
+	count = 0
 	for i in Switches:
 		if i == False:
-			print("Switch " + str(i))
+			print("Switch " + str(count))
 			time.sleep(0.1)
+		count += 1
 	
