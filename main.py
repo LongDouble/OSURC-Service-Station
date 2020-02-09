@@ -30,7 +30,7 @@ SETUP_PINS()
 
 window.addstr("Connecting to Arduino...\n")
 window.refresh()
-#ser = serial.Serial('/dev/ttyUSB0', 9600)
+ser = serial.Serial('/dev/ttyACM0', 9600)
 
 window.addstr("Listening...\n")
 window.refresh()
@@ -45,9 +45,9 @@ while True:
 		if i == False and Button_Was_Pressed[count] == False: #If PIN is LOW and wasn't already triggered
 			window.addstr("Button " + str(count) + "\n")
 			window.refresh()
-			message = "0," + str(count) + ",+"
+			message = "0," + str(count) + ",*"
 			message = message.encode()
-			#ser.write(message)
+			ser.write(message)
 			Button_Was_Pressed[count] = True
 		count += 1
 	
@@ -57,9 +57,9 @@ while True:
 		if i == False and Switch_Was_Triggered[count] == False:
 			window.addstr("Switch " + str(count) + "\n")
 			window.refresh()
-			message = "1," + str(count) + ",+"
+			message = "1," + str(count) + ",*"
 			message = message.encode()
-			#ser.write(message)
+			ser.write(message)
 			Switch_Was_Triggered[count] = True
 		count += 1
 	
