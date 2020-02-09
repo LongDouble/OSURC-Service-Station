@@ -15,6 +15,12 @@ Switch_Was_Triggered = [False, False, False, False, False, False, False]
 #Will hold the encoded message to sent to the Arduino
 message = ""
 
+#Will hold the type messages
+typed = ""
+
+#Will hold ASCII value of keypressed
+keypress = -1
+
 curses.initscr()
 curses.noecho()
 window = curses.newwin(30, 50, 0, 0)
@@ -68,3 +74,12 @@ while True:
 	if keypress == ord('q'):
 		curses.endwin()
 		exit()
+        elif keypress != -1:
+            typed = typed + chr(keypress)
+            typed_encoded = "3," + typed + "\n"
+            typed_encoded = typed_encoded.encode()
+            ser.write(typed_encoded)
+            window.addstr(typed + "\n")
+            window.refresh()
+            time.sleep(0.1)
+
