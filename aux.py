@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 def SETUP_PINS():
+	GPIO.setmode(GPIO.BCM) #This makes Python use the pinout numbers for PIN identification
 	GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Default is high for S1 (Button 0)
 	GPIO.setup(19, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Default is high S2 (Button 1)
 	GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Default is high S3 (Button 2)
@@ -17,7 +18,7 @@ def SETUP_PINS():
 	GPIO.setup(14, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Default is high S13 (Switch 5)
 	GPIO.setup(15, GPIO.IN, pull_up_down=GPIO.PUD_UP) #Default is high S14 (Switch 6)
 
-def SET_DEFAULT_HIGH(Buttons, Switches):
+def SET_TO_PIN_VALUE(Buttons, Switches):
 	Buttons[0] = GPIO.input(18)
 	Buttons[1] = GPIO.input(19)
 	Buttons[2] = GPIO.input(24)
