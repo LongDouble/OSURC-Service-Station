@@ -1,5 +1,6 @@
 from aux import SET_TO_PIN_VALUE, SETUP_PINS
 import RPi.GPIO as GPIO
+import curses
 import time
 import serial
 
@@ -14,14 +15,25 @@ Switch_Was_Triggered = [False, False, False, False, False, False, False]
 #Will hold the encoded message to sent to the Arduino
 message = ""
 
-print("Setting up PINS and setting default to HIGH...")
+curses.initscr()
+curses.noecho()
+window = curses.newwin(30, 50, 0, 0)
+window.keypad(1) #Escape sequences are interpresed
+curses.curs_set(0) #Make cursor invisible
+window.border(0)
+window.timeout(1000)
+window.nodelay(True)
+
+window.addstr("Setting up pins...\n")
+window.refresh()
 SETUP_PINS()
 
-print("Connecting to Arduino...")
+window.addstr("Connecting to Arduino...\n")
+window.refresh()
 #ser = serial.Serial('/dev/ttyUSB0', 9600)
 
-print("Listening")
-
+window.addstr("Listening...\n")
+window.refresh()
 
 while True:
 	#Sets all the values to the value of the PIN (HIGH or LOW)
@@ -31,23 +43,28 @@ while True:
 	count = 0
 	for i in Buttons:
 		if i == False and Button_Was_Pressed[count] == False: #If PIN is LOW and wasn't already triggered
-			print("Button " + str(count))
+			window.addstr("Button " + str(count) + "\n")
+			window.refresh()
 			message = "0," + str(count) + ",+"
 			message = message.encode()
 			#ser.write(message)
 			Button_Was_Pressed[count] = True
-			time.sleep(0.1)
 		count += 1
 	
 	#Checking switch states
 	count = 0
 	for i in Switches:
-		if i == False and Switch_Was_Triggered[count] = False:
-			print("Switch " + str(count))
+		if i == False and Switch_Was_Triggered[count] == False:
+			window.addstr("Switch " + str(count) + "\n")
+			window.refresh()
 			message = "1," + str(count) + ",+"
 			message = message.encode()
 			#ser.write(message)
 			Switch_Was_Triggered[count] = True
-			time.sleep(0.1)
 		count += 1
 	
+	keypress = window.getch()
+	
+	if keypress == ord('q'):
+		curses.endwin()
+		exit()
