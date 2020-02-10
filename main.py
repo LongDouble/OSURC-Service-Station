@@ -1,7 +1,7 @@
 from aux import SET_TO_PIN_VALUE, SETUP_PINS
 import RPi.GPIO as GPIO
-import curses
 import time
+from pynput import keyboard
 import serial
 
 #Will hold the value of the PIN each button and switch is on
@@ -18,28 +18,15 @@ message = ""
 #Will hold the type messages
 typed = ""
 
-#Will hold ASCII value of keypressed
-keypress = -1
 
-curses.initscr()
-curses.noecho()
-window = curses.newwin(30, 50, 0, 0)
-window.keypad(1) #Escape sequences are interpresed
-curses.curs_set(0) #Make cursor invisible
-window.border(0)
-window.timeout(1000)
-window.nodelay(True)
-
-window.addstr("Setting up pins...\n")
-window.refresh()
+print("Setting up pins...\n")
 SETUP_PINS()
 
-window.addstr("Connecting to Arduino...\n")
-window.refresh()
+print("Connecting to Arduino...\n")
 ser = serial.Serial('/dev/ttyACM0', 9600)
 
-window.addstr("Listening...\n")
-window.refresh()
+print("Listening...\n")
+
 
 while True:
 	#Sets all the values to the value of the PIN (HIGH or LOW)
@@ -49,9 +36,8 @@ while True:
 	count = 0
 	for i in Buttons:
 		if i == False and Button_Was_Pressed[count] == False: #If PIN is LOW and wasn't already triggered
-			window.addstr("Button " + str(count) + "\n")
-			window.refresh()
-			message = "0," + str(count) + ",*"
+			print("Button " + str(count) + "\n")
+			message = "0," + str(count) + ",*\n"
 			message = message.encode()
 			ser.write(message)
 			Button_Was_Pressed[count] = True
@@ -61,25 +47,10 @@ while True:
 	count = 0
 	for i in Switches:
 		if i == False and Switch_Was_Triggered[count] == False:
-			window.addstr("Switch " + str(count) + "\n")
-			window.refresh()
-			message = "1," + str(count) + ",*"
+			print("Switch " + str(count) + "\n")
+			message = "1," + str(count) + ",*\n"
 			message = message.encode()
 			ser.write(message)
 			Switch_Was_Triggered[count] = True
 		count += 1
 	
-	keypress = window.getch()
-	
-	if keypress == ord('q'):
-		curses.endwin()
-		exit()
-        elif keypress != -1:
-            typed = typed + chr(keypress)
-            typed_encoded = "3," + typed + "\n"
-            typed_encoded = typed_encoded.encode()
-            ser.write(typed_encoded)
-            window.addstr(typed + "\n")
-            window.refresh()
-            time.sleep(0.1)
-

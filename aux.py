@@ -1,5 +1,9 @@
 import RPi.GPIO as GPIO
 import time
+import serial
+from pynput import keyboard
+
+typed = ""
 
 def SETUP_PINS():
 	GPIO.setmode(GPIO.BCM) #This makes Python use the pinout numbers for PIN identification
@@ -35,4 +39,18 @@ def SET_TO_PIN_VALUE(Buttons, Switches):
 	Switches[4] = GPIO.input(13)
 	Switches[5] = GPIO.input(14)
 	Switches[6] = GPIO.input(15)
+
+def on_press(key):
+    try:
+        print('alphanumeric key {0} pressed'.format(
+            key.char))
+		typed = typed + key.char
+    except AttributeError:
+        print('special key {0} pressed'.format(
+            key))
+
+def on_release(key):
+    if key == keyboard.Key.esc:
+        # Stop listener
+        return False
 
