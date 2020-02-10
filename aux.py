@@ -41,10 +41,16 @@ def SET_TO_PIN_VALUE(Buttons, Switches):
 	Switches[6] = GPIO.input(15)
 
 def on_press(key):
+    global typed
     try:
         print('alphanumeric key {0} pressed'.format(
             key.char))
-		typed = typed + key.char
+        typed = typed + key.char
+        encoded = "3," + typed + "\n"
+        encoded = encoded.encode()
+        ser = serial.Serial('/dev/ttyACM0', 9600)
+        ser.write(encoded)
+        ser.close()
     except AttributeError:
         print('special key {0} pressed'.format(
             key))
