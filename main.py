@@ -1,7 +1,7 @@
-from aux import SET_TO_PIN_VALUE, SETUP_PINS, on_press, on_release
+from aux import SET_TO_PIN_VALUE, SETUP_PINS, key_press
 import RPi.GPIO as GPIO
 import time
-from pynput import keyboard
+import keyboard
 import serial
 
 #Will hold the value of the PIN each button and switch is on
@@ -15,9 +15,6 @@ Switch_Was_Triggered = [False, False, False, False, False, False, False]
 #Will hold the encoded message to sent to the Arduino
 message = ""
 
-#Will hold the type messages
-typed = ""
-
 
 print("Setting up pins...\n")
 SETUP_PINS()
@@ -25,12 +22,10 @@ SETUP_PINS()
 print("Connecting to Arduino...\n")
 ser = serial.Serial('/dev/ttyACM0', 9600)
 
-print("Setting up keyboard listener...")
-listener = keyboard.Listener(on_press=on_press,
-       on_release=on_release)
-listener.start()
 
-time.sleep(1)
+print("Setting up keyboard listener...")
+keyboard.on_press(key_press)
+
 print("Listening for events...\n")
 
 while True:

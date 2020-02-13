@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 import serial
-from pynput import keyboard
+import keyboard
 
 typed = ""
 
@@ -40,23 +40,12 @@ def SET_TO_PIN_VALUE(Buttons, Switches):
 	Switches[5] = GPIO.input(14)
 	Switches[6] = GPIO.input(15)
 
-def on_press(key):
+def key_press(key):
     global typed
-    try:
-        print('alphanumeric key {0} pressed'.format(
-            key.char))
-        typed = typed + key.char
-        encoded = "3," + typed + "\n"
-        encoded = encoded.encode()
-        ser = serial.Serial('/dev/ttyACM0', 9600)
-        ser.write(encoded)
-        ser.close()
-    except AttributeError:
-        print('special key {0} pressed'.format(
-            key))
+    typed = typed + key.name
+    encoded = "3," + typed + "\n"
+    encoded = encoded.encode()
+    ser = serial.Serial('/dev/ttyACM0', 9600)
+    ser.write(encoded)
 
-def on_release(key):
-    if key == keyboard.Key.esc:
-        # Stop listener
-        return False
 
