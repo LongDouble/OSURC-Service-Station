@@ -41,6 +41,14 @@ while True:
                 message = message.encode()
                 ser.write(message)
                 Button_Was_Pressed[count] = True
+                time.sleep(0.25)
+            elif i == False and Button_Was_Pressed[count] == True:
+                print("Button " + str(count) + "\n")
+                message = "0," + str(count) + ",-\n"
+                message = message.encode()
+                ser.write(message)
+                Button_Was_Pressed[count] = False
+                time.sleep(0.25)
             count += 1
 
         #Checking switch states
@@ -52,5 +60,13 @@ while True:
                 message = message.encode()
                 ser.write(message)
                 Switch_Was_Triggered[count] = True
+                time.sleep(0.25)
+            elif i == True and Switch_Was_Triggered[count] == True:
+                print("Switch " + str(count) + "\n")
+                message = "1," + str(count) + ",-\n"
+                message = message.encode()
+                ser.write(message)
+                Switch_Was_Triggered[count] = False
+                time.sleep(0.25)
             count += 1
 
